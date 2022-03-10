@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %} Kafelki {% endblock %}
+
+{% block content %}
+
+<form method="POST" action="{% url 'add_tile' %}" id="tile_form">
+    {% csrf_token %}
+    {{TileForm}}
+    <input type="submit" value="Create!" />
+</form>
+
+<form method="POST" action="{% url 'add_category' %}" id="category_form">
+    {% csrf_token %}
+    {{CategoryForm}}
+    <input type="submit" value="Create!" />
+</form>
+
+{% for tile in tiles %}
+<div class="tile" style="background-color: {{tile.category.color.hexcolor}};">
+    <div class="tile-name">{{tile.name}}</div>
+    <div class="tile-desc">{{tile.description}}</div>
+    <div class="cat-name">{{tile.category.name}}</div>
+</div>
+
+<div class="tile_view">
+
+</div>
+{% endfor %}
+
+{% endblock %}
+
+
+{% block script %}
+
+{% endblock %}
+
+{% block style %}
+.tile {
+    width: 10%;
+    padding: 10px;
+    margin: 20px;
+}
+
+.tile-name {
+    font-size: 24px;
+}
+
+.tile-desc {
+    display: none;
+}
+
+.tile:hover + .tile-desc {
+  display: block;
+}
+
+{% endblock %}
