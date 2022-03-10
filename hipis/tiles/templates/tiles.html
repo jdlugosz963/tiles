@@ -17,10 +17,10 @@
 </form>
 
 {% for tile in tiles %}
-<div class="tile" style="background-color: {{tile.category.color.hexcolor}};">
-    <div class="tile-name">{{tile.name}}</div>
-    <div class="tile-desc">{{tile.description}}</div>
-    <div class="cat-name">{{tile.category.name}}</div>
+<div class="flex p-10 m-10 w-min h-min" style="background-color: {{tile.category.color.hexcolor}};">
+    <div class="w-full p-2">{{tile.name}}</div>
+    <div class="w-full p-2 hidden">{{tile.description}}</div>
+    <div class="w-full p-2">{{tile.category.name}}</div>
 </div>
 
 <div class="tile_view">
@@ -32,26 +32,7 @@
 
 
 {% block script %}
-
 {% endblock %}
 
 {% block style %}
-.tile {
-    width: 10%;
-    padding: 10px;
-    margin: 20px;
-}
-
-.tile-name {
-    font-size: 24px;
-}
-
-.tile-desc {
-    display: none;
-}
-
-.tile:hover + .tile-desc {
-  display: block;
-}
-
 {% endblock %}

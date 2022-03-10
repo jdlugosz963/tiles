@@ -11,11 +11,11 @@ def index(request):
     })
 
 def add_tile(request):
-    tile = Tile.objects.create(**request.POST)
+    tile = TileForm(request.POST)
     tile.save()
     return redirect("index")
 
 def add_category(request):
-    category = Category.objects.create(**request.POST)
+    category = CategoryForm(request.POST)
     category.save()
     return redirect("index")
