@@ -1,0 +1,27 @@
+#+TITLE: Readme
+
+* About
+- tiles like in windows 8 - school project
+
+* How to start project?
+- clone first
+  #+begin_src shell
+    git clone https://github.com/jdlugosz963/tiles.git
+  #+end_src
+
+- install python req
+  #+begin_src shell
+    pip install -r requirements.txt
+  #+end_src
+
+- make migrations
+  #+begin_src shell
+    cd hipis
+    ./manage.py makemigrations
+    ./manage.py migrate
+  #+end_src
+
+- Finally, run project
+  #+begin_src shell
+    ./manage.py runserver
+  #+end_src
