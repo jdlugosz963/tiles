@@ -4,34 +4,83 @@
 
 {% block content %}
 
-<form method="POST" action="{% url 'add_tile' %}" id="tile_form">
-    {% csrf_token %}
-    {{TileForm}}
-    <input type="submit" value="Create!" />
-</form>
 
-<form method="POST" action="{% url 'add_category' %}" id="category_form">
-    {% csrf_token %}
-    {{CategoryForm}}
-    <input type="submit" value="Create!" />
-</form>
+<div class="grid grid-cols-4 mt-5 gap-4">
+    {% for tile in tiles %}
+    <div class="flex flex-wrap p-10 rounded-sm mt-5" style="background-color: {{tile.category.color.hexcolor}};">
+        <div class="w-full text-xl border-b p-2">{{tile.name}}</div>
+        <div class="w-full p-2">{{tile.description}}</div>
+        <div class="w-full p-2">{{tile.category.name}}</div>
+    </div>
+    {% endfor %}
 
-{% for tile in tiles %}
-<div class="flex p-10 m-10 w-min h-min" style="background-color: {{tile.category.color.hexcolor}};">
-    <div class="w-full p-2">{{tile.name}}</div>
-    <div class="w-full p-2 hidden">{{tile.description}}</div>
-    <div class="w-full p-2">{{tile.category.name}}</div>
+    <div class="flex justify-center items-center bg-back-100 p-10 mt-5 bg-green-400 cursor-pointer rounded-sm" onclick="$('#tile-create-container').show()">
+        <svg version="1.1" class="text-gray-200 fill-current h-12 w-12" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+             viewBox="0 0 60.364 60.364" style="enable-background:new 0 0 60.364 60.364;" xml:space="preserve" width="40" height="40">
+            <g>
+                <path d="M54.454,23.18l-18.609-0.002L35.844,5.91C35.845,2.646,33.198,0,29.934,0c-3.263,0-5.909,2.646-5.909,5.91v17.269
+                         L5.91,23.178C2.646,23.179,0,25.825,0,29.088c0.002,3.264,2.646,5.909,5.91,5.909h18.115v19.457c0,3.267,2.646,5.91,5.91,5.91
+                         c3.264,0,5.909-2.646,5.91-5.908V34.997h18.611c3.262,0,5.908-2.645,5.908-5.907C60.367,25.824,57.718,23.178,54.454,23.18z"/>
+            </g>
+        </svg>
+    </div>
 </div>
 
-<div class="tile_view">
-
+<div id="tile-create-container" style="display: none;" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-opacity-50 bg-gray-700 w-full h-full">
+    <div id="tile-create-card" class="absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 text-center bg-orange-500 rounded-sm p-2">
+        <div class="flex m-5 justify-between items-start p-5 rounded-t border-b dark:border-gray-600">
+            <h3 class="text-xl">
+                Add Tile
+            </h3>
+            <div onclick="hide_all()" class="text-gray-400 cursor-pointer bg-transparent hover:bg-orange-400 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                <svg class="w-5 h-5" fill="white" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            </div>
+        </div>
+        <form method="POST" action="{% url 'add_tile' %}" id="tile-form">
+            {% csrf_token %}
+            {{TileForm.as_p}}
+            <input type="submit" value="Create!" />
+        </form>
+        No category in the list? Add another one!
+        <input type="button" value="Add" onclick="hide_all(); show_category()">
+    </div>
 </div>
-{% endfor %}
 
+<div id="category-create-container" style="display: none;" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-opacity-50 bg-gray-700 w-full h-full">
+    <div id="category-create-card" class="absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 text-center bg-orange-500 rounded-sm p-2">
+        <div class="flex m-5 justify-between items-start p-5 rounded-t border-b dark:border-gray-600">
+            <h3 class="text-xl">
+                Add Category
+            </h3>
+            <div onclick="hide_all()" class="text-gray-400 cursor-pointer bg-transparent hover:bg-orange-400 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                <svg class="w-5 h-5" fill="white" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            </div>
+        </div>
+        <form method="POST" action="{% url 'add_category' %}" id="category_form">
+            {% csrf_token %}
+            {{CategoryForm}}
+            <input type="submit" value="Create!" />
+        </form>
+        Add tile!
+        <input type="button" value="Add" onclick="hide_all(); show_tile()">
+    </div>
+</div>
 {% endblock %}
 
 
 {% block script %}
+TILE_ID = '#tile-create-container'
+CATEGORY_ID = '#category-create-container'
+function show_tile() { $(TILE_ID).show(); }
+function hide_tile() { $(TILE_ID).hide(); }
+function hide_category() { $(CATEGORY_ID).hide(); }
+function show_category() { $(CATEGORY_ID).show(); }
+
+function hide_all() { hide_tile(); hide_category(); }
+
+$(document).ready(function(){
+
+});
 {% endblock %}
 
 {% block style %}
