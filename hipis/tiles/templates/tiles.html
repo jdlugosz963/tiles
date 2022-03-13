@@ -7,14 +7,14 @@
 
 <div class="grid grid-cols-4 mt-5 gap-4">
     {% for tile in tiles %}
-    <div class="flex flex-wrap p-10 rounded-sm mt-5" style="background-color: {{tile.category.color.hexcolor}};">
+    <div class="flex flex-wrap p-10 rounded-sm mt-5 {{tile.category.color}}">
         <div class="w-full text-xl border-b p-2">{{tile.name}}</div>
         <div class="w-full p-2">{{tile.description}}</div>
         <div class="w-full p-2">{{tile.category.name}}</div>
     </div>
     {% endfor %}
 
-    <div class="flex justify-center items-center bg-back-100 p-10 mt-5 bg-green-400 cursor-pointer rounded-sm" onclick="$('#tile-create-container').show()">
+    <div class="flex justify-center items-center bg-back-100 p-10 mt-5 bg-lime-600 cursor-pointer rounded-sm" onclick="$('#tile-create-container').show()">
         <svg version="1.1" class="text-gray-200 fill-current h-12 w-12" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
              viewBox="0 0 60.364 60.364" style="enable-background:new 0 0 60.364 60.364;" xml:space="preserve" width="40" height="40">
             <g>
