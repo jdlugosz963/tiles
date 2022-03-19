@@ -6,7 +6,8 @@ class TileForm(forms.ModelForm):
         super(TileForm, self).__init__(*args, **kwargs)
         for key, value in self.fields.items():
             value.widget.attrs['placeholder'] = key.capitalize()
-            value.widget.attrs['class'] = "bg-orange-700 p-2 m-2"
+            value.widget.attrs['class'] = "bg-orange-600 p-2 m-2"
+            value.label = ""
 
     class Meta:
         model=Tile
@@ -16,9 +17,11 @@ class TileForm(forms.ModelForm):
 class CategoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CategoryForm, self).__init__(*args, **kwargs)
+        self.fields['name'].label = ""
         for key, value in self.fields.items():
             value.widget.attrs['placeholder'] = key.capitalize()
-            value.widget.attrs['class'] = "bg-orange-700 p-2 m-2"
+            value.widget.attrs['class'] = "bg-orange-600 p-2 m-2"
+            value.label = ""
 
     class Meta:
         model=Category
