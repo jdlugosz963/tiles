@@ -4,17 +4,28 @@
 
 {% block content %}
 
+{% if user.is_authenticated %}
+<div id="user_container" class="absolute">
+    <span class="">Hi, {{user}}!</span>
+    <input type="button" value="Logout" onclick="" class="pr-2 pl-2 p-1 rounded-lg cursor-pointer mt-1 bg-slate-600 hover:bg-orange-400" />
+</div>
+{% else %}
+<div id="login-button" class="absolute">
+    <input type="button" value="Login" onclick="show_login_container()" class="pr-2 pl-2 p-1 rounded-lg cursor-pointer mt-1 bg-slate-600 hover:bg-orange-400" />
+</div>
+{% endif %}
 
 <div class="grid sm:grif-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-5 gap-4">
     {% for tile in tiles %}
-    <div class="flex flex-wrap p-10 rounded-sm mt-5 shadow shadow-gray-800 transition ease-in-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-gray-800 hover:-translate-y-1 hover:scale-110 duration-300 {{tile.category.color}}">
+    <div class="flex focus:animate-bounce cursor-pointer flex-wrap p-10 rounded-sm mt-5 shadow shadow-gray-800 transition ease-in-out hover:-translate-y-52 hover:shadow-2xl hover:shadow-gray-800 hover:-translate-y-1 hover:scale-110 duration-300 {{tile.category.color}}">
         <div class="w-full text-xl border-b p-2">{{tile.name}}</div>
         <div class="w-full p-2">{{tile.description}}</div>
         <div class="w-full p-2">{{tile.category.name}}</div>
     </div>
     {% endfor %}
 
-    <div class="flex justify-center items-center bg-back-100 shadow transition ease-in-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-gray-800 hover:-translate-y-1 hover:scale-110 duration-300 shadow-gray-800 p-10 mt-5 bg-lime-600 cursor-pointer rounded-sm" onclick="$('#tile-create-container').show()">
+    {% if user.is_authenticated %}
+    <div onclick="show_tile()" class="flex justify-center items-center bg-back-100 shadow transition ease-in-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-gray-800 hover:-translate-y-1 hover:scale-110 duration-300 shadow-gray-800 p-10 mt-5 bg-lime-600 cursor-pointer rounded-sm">
         <svg version="1.1" class="text-gray-200 fill-current h-12 w-12" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
              viewBox="0 0 60.364 60.364" style="enable-background:new 0 0 60.364 60.364;" xml:space="preserve" width="40" height="40">
             <g>
@@ -24,61 +35,37 @@
             </g>
         </svg>
     </div>
+    {% endif %}
 </div>
 
-<div id="tile-create-container" style="display: none;" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition ease-in-out bg-opacity-50 bg-gray-700 w-full h-full">
-    <div id="tile-create-card" class="absolute top-1/2 shadow-lg shadow-black left-1/2  transform -translate-x-1/2 -translate-y-1/2 text-center bg-orange-500 rounded-sm p-2">
-        <div class="flex m-5 justify-between items-start p-5 rounded-t border-b">
-            <h3 class="text-xl font-bold">
-                Add Tile
-            </h3>
-            <div onclick="hide_all()" class="text-gray-400 cursor-pointer bg-transparent hover:bg-orange-400 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
-                <svg class="w-5 h-5" fill="white" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-            </div>
-        </div>
-        <form method="POST" action="{% url 'add_tile' %}" id="tile-form">
-            {% csrf_token %}
-            <div class="w-full">{{TileForm.name}} {{TileForm.category}}</div>
-            <div class="w-full">{{TileForm.description}}</div>
-            <input type="submit" class="pl-2 pr-2 p-1 bg-orange-700 cursor-pointer rounded-lg" value="Create!">
-        </form>
-        No category in the list? Add another one!
-        <input type="button" class="pl-2 m-2 pr-2 p-1 bg-transparent hover:bg-orange-400 cursor-pointer rounded-lg" value="Add" onclick="hide_all(); show_category()">
-    </div>
-</div>
+{% url 'add_tile' as add_tile %}
+{% include 'form.html' with name="tile-create" title="Add tile!" action=add_tile form=TileForm.as_p submit_name="Create!" message="Do u want to add category?" message_value="Add category!" message_onclick="hide_all(); show_category()" %}
 
-<div id="category-create-container" style="display: none;" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-opacity-50 bg-gray-700 w-full h-full">
-    <div id="category-create-card" class="absolute top-1/2 shadow-lg shadow-black left-1/2  transform -translate-x-1/2 -translate-y-1/2 text-center bg-orange-500 rounded-sm p-2">
-        <div class="flex m-5 justify-between items-start p-5 rounded-t border-b">
-            <h3 class="text-xl font-bold">
-                Add Category
-            </h3>
-            <div onclick="hide_all()" class="text-gray-400 cursor-pointer bg-transparent hover:bg-orange-400 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
-                <svg class="w-5 h-5" fill="white" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-            </div>
-        </div>
-        <form method="POST" action="{% url 'add_category' %}" id="category_form">
-            {% csrf_token %}
-            <div class="w-full form-field">{{CategoryForm.name}} {{CategoryForm.color}}</div>
-        </form>
-        Add tile!
-        <input type="button" class="pl-2 m-2 pr-2 p-1 bg-transparent hover:bg-orange-400 cursor-pointer rounded-lg" value="Add" onclick="hide_all(); show_tile()">
+{% url 'add_category' as add_category %}
+{% include 'form.html' with name="category-create" title="Add category!" action=add_category form=CategoryForm.as_p submit_name="Create!" message="Do u want to add tile?" message_value="Add tile!" message_onclick="hide_all(); show_tile()" %}
 
+{% url 'login' as login_url %}
+{% include 'form.html' with name="login" title="Login" action=login_url submit_name="login!" message="Dont have account?" message_value="Register!" message_onclick="hide_all()" %}
 
-    </div>
-</div>
 {% endblock %}
 
 
 {% block script %}
 TILE_ID = '#tile-create-container'
 CATEGORY_ID = '#category-create-container'
-function show_tile() { $(TILE_ID).show(); }
-function hide_tile() { $(TILE_ID).hide(); }
-function hide_category() { $(CATEGORY_ID).hide(); }
-function show_category() { $(CATEGORY_ID).show(); }
+LOGIN_ID = "#login-container"
+function hide_tile() { $(TILE_ID).addClass("invisible") }
+function hide_category() { $(CATEGORY_ID).addClass("invisible") }
+function hide_login() { $(LOGIN_ID).addClass("invisible") }
+function show_tile() { $(TILE_ID).removeClass("invisible") }
+function show_category() { $(CATEGORY_ID).removeClass("invisible") }
+function show_login() { $(LOGIN_ID).removeClass("invisible") }
 
-function hide_all() { hide_tile(); hide_category(); }
+function hide_all() { hide_tile(); hide_category(); hide_login() }
+
+function show_login_container() {
+    $(LOGIN_ID).toggleClass("invisible")
+}
 
 $(document).ready(function(){
 
