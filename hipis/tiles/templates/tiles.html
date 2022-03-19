@@ -7,7 +7,7 @@
 {% if user.is_authenticated %}
 <div id="user_container" class="absolute">
     <span class="">Hi, {{user}}!</span>
-    <input type="button" value="Logout" onclick="" class="pr-2 pl-2 p-1 rounded-lg cursor-pointer mt-1 bg-slate-600 hover:bg-orange-400" />
+    <input type="button" value="Logout" onclick="window.location.replace('{% url "logout" %}')" class="pr-2 pl-2 p-1 rounded-lg cursor-pointer mt-1 bg-slate-600 hover:bg-orange-400" />
 </div>
 {% else %}
 <div id="login-button" class="absolute">
@@ -45,7 +45,7 @@
 {% include 'form.html' with name="category-create" title="Add category!" action=add_category form=CategoryForm.as_p submit_name="Create!" message="Do u want to add tile?" message_value="Add tile!" message_onclick="hide_all(); show_tile()" %}
 
 {% url 'login' as login_url %}
-{% include 'form.html' with name="login" title="Login" action=login_url submit_name="login!" message="Dont have account?" message_value="Register!" message_onclick="hide_all()" %}
+{% include 'form.html' with name="login" title="Login" action=login_url submit_name="login!" message="Dont have account?" message_value="Register!" message_onclick="hide_all()" form=LoginForm.as_p %}
 
 {% endblock %}
 
