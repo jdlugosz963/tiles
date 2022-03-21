@@ -8,9 +8,9 @@ def login_view(request):
     user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request, user)
-        return redirect("index")
     else:
-        return redirect("index", message="Login, failed!")
+        request.session['message'] = "Login, Failed!"
+    return redirect("index")
 
 def logout_view(request):
     logout(request)
