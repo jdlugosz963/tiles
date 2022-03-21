@@ -11,16 +11,32 @@
 </div>
 {% else %}
 <div id="login-button" class="absolute">
-    <input type="button" value="Login" onclick="show_login_container()" class="pr-2 pl-2 p-1 rounded-lg cursor-pointer mt-1 bg-slate-600 hover:bg-orange-400" />
+    <input type="button" value="Login" onclick="show_login_container()" class="pr-2 pl-2 p-1 rounded-lg focus:animate-bounce cursor-pointer mt-1 bg-slate-600 hover:bg-orange-400" />
 </div>
 {% endif %}
 
-<div class="grid sm:grif-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-5 gap-4">
+<div id="tile_container" class="grid sm:grif-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-5 gap-4">
     {% for tile in tiles %}
-    <div class="flex focus:animate-bounce cursor-pointer flex-wrap p-10 rounded-sm mt-5 shadow shadow-gray-800 transition ease-in-out hover:-translate-y-52 hover:shadow-2xl hover:shadow-gray-800 hover:-translate-y-1 hover:scale-110 duration-300 {{tile.category.color}}">
-        <div class="w-full text-xl border-b p-2">{{tile.name}}</div>
-        <div class="w-full p-2">{{tile.description}}</div>
-        <div class="w-full p-2">{{tile.category.name}}</div>
+    <div onclick="show_comments('{{tile.id}}')" id="{{tile.id}}" class="tile flex focus:animate-bounce cursor-pointer flex-wrap p-10 rounded-sm mt-5 shadow shadow-gray-800 transition ease-in-out hover:-translate-y-52 hover:shadow-2xl hover:shadow-gray-800 hover:-translate-y-1 hover:scale-110 duration-300 {{tile.category.color}}">
+        <div class="grid grid-cols-2">
+            <div class="w-1/2 h-full">
+                <div class="text-xl border-b p-2">{{tile.name}}</div>
+                <div class="p-2">{{tile.description}}</div>
+                <div class="p-2">{{tile.category.name}}</div>
+            </div>
+
+            <div class="w-1/2 h-full overflow-y-auto p-2">
+                <div class="bg-slate-900 mt-2 p-2 rounded-sm shadow-sm shadow-white">
+                    siemka
+                </div>
+                <form method="POST" action="{% url 'add_comment' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="tile" value="{{tile.id}}">
+                    {{CommentForm}}
+                    <input type="submit" value="Create!">
+                </form>
+            </div>
+        </div>
     </div>
     {% endfor %}
 
@@ -67,9 +83,17 @@ function show_login_container() {
     $(LOGIN_ID).toggleClass("invisible")
 }
 
-$(document).ready(function(){
+function show_comments(id) {
+    var div = document.getElementById('tile_container');
+    var tiles = div.getElementsByClassName('tile');
 
-});
+    for (let i = 0; i < tiles.length; i += 1) {
+        tiles[i].classList.remove("col-span-2");
+    }
+
+    let tile=document.getElementById(id)
+    tile.classList.add("col-span-2");
+}
 {% endblock %}
 
 {% block style %}
