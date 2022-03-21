@@ -10,7 +10,8 @@ def index(request):
         "tiles": tiles,
         "CategoryForm": CategoryForm,
         "TileForm": TileForm,
-        "LoginForm": LoginForm
+        "LoginForm": LoginForm,
+        "CommentForm": CommentFrom
     })
 
 @login_required
@@ -19,7 +20,16 @@ def add_tile(request):
     tile.save()
     return redirect("index")
 
+@login_required
 def add_category(request):
     category = CategoryForm(request.POST)
     category.save()
+    return redirect("index")
+
+@login_required
+def add_comment(request):
+    data = request.POST.copy()
+    data["owner"] = str(request.user.id)
+    comment = CommentFrom(data)
+    comment.save()
     return redirect("index")
