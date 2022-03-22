@@ -25,15 +25,20 @@
                 <div class="p-2">{{tile.category.name}}</div>
             </div>
 
-            <div class="w-1/2 h-full overflow-y-auto p-2">
-                <div class="bg-slate-900 mt-2 p-2 rounded-sm shadow-sm shadow-white">
-                    siemka
-                </div>
+            <div class="comment_container w-1/2 invisible h-full overflow-y-scroll p-2">
+                {% for comment in comments %}
+                    {% if comment.tile.pk == tile.pk %}
+                        <div class="bg-slate-900 mt-2 p-2 rounded-sm shadow-sm shadow-white">
+                            {{comment.description}}
+                        </div>
+                    {% endif %}
+                {% endfor %}
                 <form method="POST" action="{% url 'add_comment' %}">
                     {% csrf_token %}
                     <input type="hidden" name="tile" value="{{tile.id}}">
-                    {{CommentForm}}
-                    <input type="submit" value="Create!">
+                    <textarea name="description">
+                    </textarea>
+                    <input type="submit" value="Post!">
                 </form>
             </div>
         </div>
@@ -83,16 +88,29 @@ function show_login_container() {
     $(LOGIN_ID).toggleClass("invisible")
 }
 
+let last_tile_id
 function show_comments(id) {
-    var div = document.getElementById('tile_container');
-    var tiles = div.getElementsByClassName('tile');
+    let div = document.getElementById('tile_container');
+    let tiles = div.getElementsByClassName('tile');
+    let comments = 0
 
     for (let i = 0; i < tiles.length; i += 1) {
         tiles[i].classList.remove("col-span-2");
+        comments = tiles[i].getElementsByClassName('comment_container');
+
+        for (let j = 0; j < comments.length; j += 1) {
+            comments[j].classList.add("invisible");
+        }
     }
 
-    let tile=document.getElementById(id)
-    tile.classList.add("col-span-2");
+    if(last_tile_id!=id) {
+        let tile=document.getElementById(id)
+        tile.classList.add("col-span-2");
+        let comment = tile.getElementsByClassName("comment_container")[0]
+        comment.classList.remove("invisible");
+        last_tile_id = -1
+    }
+    last_tile_id = id
 }
 {% endblock %}
 
