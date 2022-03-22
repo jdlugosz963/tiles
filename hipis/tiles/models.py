@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Category(models.Model):
     name = models.CharField(max_length=15)
     color = models.CharField(
@@ -30,9 +31,9 @@ class Tile(models.Model):
         return self.name
 
 class Comment(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.PROTECT)
     tile = models.ForeignKey(Tile, on_delete=models.CASCADE)
     description = models.TextField()
 
     def __str__(self):
-        return self.owner
+        return self.owner.username
