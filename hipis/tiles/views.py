@@ -1,17 +1,18 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Tile
+from .models import Tile, Comment
 from .forms import *
 from accounts.forms import LoginForm
 
 def index(request):
     tiles = Tile.objects.all()
+    comments = Comment.objects.all()
     return render(request, "tiles.html", {
         "tiles": tiles,
         "CategoryForm": CategoryForm,
         "TileForm": TileForm,
         "LoginForm": LoginForm,
-        "CommentForm": CommentFrom
+        "comments": comments
     })
 
 @login_required
@@ -28,8 +29,11 @@ def add_category(request):
 
 @login_required
 def add_comment(request):
-    data = request.POST.copy()
-    data["owner"] = str(request.user.id)
-    comment = CommentFrom(data)
+    data = {
+        "description": request.POST.get("description", None),
+        "tile": get_object_or_404(Tile, pk=request.POST.get("tile", None)),
+        "owner": request.user
+    }
+    comment = Comment(**data)
     comment.save()
     return redirect("index")
