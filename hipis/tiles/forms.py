@@ -25,12 +25,3 @@ class CategoryForm(forms.ModelForm):
     class Meta:
         model=Category
         fields = '__all__'
-
-class CommentFrom(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(CommentFrom, self).__init__(*args, **kwargs)
-        set_default_styles(self)
-
-    class Meta:
-        model=Comment
-        fields = ("description", )
